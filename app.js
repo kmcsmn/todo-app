@@ -43,8 +43,8 @@ function addTodo(event) {
   // APPEND TODODIV ON THE UL ELEMENT (todoList)
   todoList.appendChild(todoDiv);
 
-  // TO CLEAR TODO INPUT VALUE
-  todoInput.value = 'e.g pick up your damn sufferings';
+  // CLEAR TODO INPUT VALUE
+  todoInput.value = '';
 }
 
 function deleteCheck(event) {
@@ -56,6 +56,7 @@ function deleteCheck(event) {
 
     // adding class for animation
     todo.classList.add('fall');
+    removeToLocal(todo);
     // wait for transition to end before removing the item
     todo.addEventListener('transitionend', function () {
       todo.remove();
@@ -153,4 +154,21 @@ function getTodos() {
     // APPEND TODODIV ON THE UL ELEMENT (todoList)
     todoList.appendChild(todoDiv);
   });
+}
+
+// remove todo to local storage
+function removeToLocal(todo) {
+  let todos;
+  if (localStorage.getItem('todos') === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem('todos'));
+  }
+
+  // get the index of an item that we want to delete
+  // and remove the item from the array using splice
+  const todoIndex = todo.children[0].innerHTML;
+  todos.splice(todos.indexOf(todoIndex, 1));
+
+  localStorage.setItem('todos', JSON.stringify(todos));
 }
