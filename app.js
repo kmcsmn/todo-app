@@ -5,6 +5,7 @@ const todoList = document.querySelector('.todo-list');
 const todoFilter = document.querySelector('.filter-todo');
 
 // EVENT LISTENERS
+document.addEventListener('DOMContentLoaded', getTodos); // wait for the everything to load up
 todoBtn.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 todoList.addEventListener('click', checkMark);
@@ -24,6 +25,9 @@ function addTodo(event) {
   newTodo.classList.add('new-todo');
   todoDiv.appendChild(newTodo);
 
+  // add todo to local storage
+  saveLocalTodos(todoInput.value);
+
   // CHECK MARK BUTTON
   const completeBtn = document.createElement('button');
   completeBtn.classList.add('completed-btn');
@@ -40,7 +44,7 @@ function addTodo(event) {
   todoList.appendChild(todoDiv);
 
   // TO CLEAR TODO INPUT VALUE
-  todoInput.value = '';
+  todoInput.value = 'e.g pick up your damn sufferings';
 }
 
 function deleteCheck(event) {
@@ -92,5 +96,61 @@ function filterTodo(e) {
         }
         break;
     }
+  });
+}
+
+function saveLocalTodos(todo) {
+  // check whether theres already an item on todos
+  let todos;
+
+  // if it nothing exist, then create an empty array
+  if (localStorage.getItem('todos') === null) {
+    todos = [];
+  } else {
+    // if something already exists then get those items (array) from localstorage
+    todos = JSON.parse(localStorage.getItem('todos'));
+  }
+  // push the todo item from todos
+  todos.push(todo);
+  // set the todos back to local storage
+  localStorage.setItem('todos', JSON.stringify(todos));
+  // basically, parse converts a json string into js object
+  // and stringify convert js objects into json string
+}
+
+// get the items from local storage
+function getTodos() {
+  if (localStorage.getItem('todos') === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem('todos'));
+  }
+
+  // loop through todos array
+  todos.forEach(function (todo) {
+    // CREATE A TODO ITEM
+    const todoDiv = document.createElement('div');
+    todoDiv.classList.add('todo');
+    // create li
+    const newTodo = document.createElement('li');
+    // add the value from localstorage (todo)
+    newTodo.innerText = todo;
+    newTodo.classList.add('new-todo');
+    todoDiv.appendChild(newTodo);
+
+    // CHECK MARK BUTTON
+    const completeBtn = document.createElement('button');
+    completeBtn.classList.add('completed-btn');
+    completeBtn.innerHTML = '<i class="fas fa-check"></li>';
+    todoDiv.appendChild(completeBtn);
+
+    // DELETE OR TRASH BUTTON
+    const trashBtn = document.createElement('button');
+    trashBtn.classList.add('trash-btn');
+    trashBtn.innerHTML = '<i class="fas fa-trash"></li>';
+    todoDiv.appendChild(trashBtn);
+
+    // APPEND TODODIV ON THE UL ELEMENT (todoList)
+    todoList.appendChild(todoDiv);
   });
 }
