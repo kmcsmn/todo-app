@@ -121,6 +121,7 @@ function saveLocalTodos(todo) {
 
 // get the items from local storage
 function getTodos() {
+  // let todos;
   if (localStorage.getItem('todos') === null) {
     todos = [];
   } else {
@@ -167,8 +168,8 @@ function removeToLocal(todo) {
 
   // get the index of an item that we want to delete
   // and remove the item from the array using splice
-  const todoIndex = todo.children[0].innerHTML;
+  let todoIndex = todo.children[0].innerHTML;
+  console.log(todo.children[0].innerHTML);
   todos.splice(todos.indexOf(todoIndex, 1));
-
   localStorage.setItem('todos', JSON.stringify(todos));
 }
